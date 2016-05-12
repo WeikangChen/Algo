@@ -71,8 +71,6 @@ public:
         dfs_complete(cur, res);
         return res;
     }
-    
-
 };
 
 
