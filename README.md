@@ -1,1 +1,1 @@
-Alog Studying
+Alogorithm Studying
