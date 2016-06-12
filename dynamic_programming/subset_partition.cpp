@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 
@@ -31,7 +32,7 @@ bool partition(vector<int> arr) {
 
 int main(int argc, char *argv[])
 {
-    int a[] = {1,2,3,4,5,6,7};
+    int a[] = {5, 4, 9};
     vector<int> arr(a, a+sizeof(a)/sizeof(int));
     bool p = partition(arr);
     cout << (p ? "True" : "False") << endl;
