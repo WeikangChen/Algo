@@ -1,0 +1,35 @@
+// C++ program to illustrate the use of auto_ptr
+#include<iostream>
+#include<memory>
+#include<vector>
+using namespace std;
+ 
+class A
+{
+public:
+    void show() {  cout << "A::show()" << endl; }
+};
+ 
+int main()
+{
+    vector<auto_ptr<A> > vec_a;
+    
+    // p1 is an auto_ptr of type A
+    auto_ptr<A> p1(new A);
+    p1 -> show();
+ 
+    // returns the memory address of p1
+    cout << p1.get() << endl;
+ 
+    // copy constructor called, this makes p1 empty.
+    auto_ptr <A> p2(move(p1));
+    p2 -> show();
+    vec_a.push_back(p2);
+    // p1 is empty now
+    cout << p1.get() << endl;
+ 
+    // p1 gets copied in p2
+    cout<< p2.get() << endl;
+ 
+    return 0;
+}
