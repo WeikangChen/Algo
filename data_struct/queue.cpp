@@ -1,40 +1,35 @@
 #include <iostream>
 #include <sstream>
+#include <memory>
 
 using namespace std;
 
-template <typename T>
+template <typename T, size_t CAP>
 class queue {
     static constexpr const char* full_error = "ERROR: queue is full";
     static constexpr const char* empty_error = "ERROR: queue is empty";
-    T* data = nullptr;
-    size_t capacity;
+    unique_ptr<T[]> data;
     size_t head = 0;
     size_t tail = 0;
     size_t size = 0;
-public:
-    queue(size_t cap) : capacity{cap} {
-        data = new T[capacity];
-    }
+
+ public:
+    queue() : data{make_unique<T[]>(CAP)} {}
     queue(const queue& rhs) = delete;
     queue(queue&& rhs) = delete;
     void operator=(const queue& rhs) = delete;
     void operator=(queue&& rhs) = delete;
-    ~queue() { delete[] data; }
+    ~queue() = default;
 
-    bool empty() const {
-        return size == 0;
-    }
+    bool empty() const { return size == 0; }
 
-    bool full() const {
-        return size == capacity;
-    }
+    bool full() const { return size == CAP; }
 
     void push(const T& val) {
-        if (size == capacity) 
+        if (full())
             throw full_error;
         data[tail++] = val;
-        tail %= capacity;
+        tail %= CAP;
         ++size;
     }
 
@@ -42,7 +37,7 @@ public:
         if (empty())
             throw empty_error;
         ++head;
-        head %= capacity;
+        head %= CAP;
         --size;
     }
 
@@ -58,10 +53,10 @@ public:
         ostringstream oss;
         auto i = head;
         oss << data[i];
-        i = (i + 1) % capacity;
+        i = (i + 1) % CAP;
         while (i != tail) {
             oss << "," << data[i];
-            i = (i + 1) % capacity;
+            i = (i + 1) % CAP;
         }
         oss << " size=" << size;
         oss << " head=" << head;
@@ -71,7 +66,7 @@ public:
 };
 
 int main(int argc, char** argv) {
-    queue<double> q(5);
+    queue<double, 5> q;
     try {
         q.pop();
     } catch (const char* msg) {
@@ -82,7 +77,7 @@ int main(int argc, char** argv) {
             while (q.full())
                 q.pop();
             q.push(1.1 * i);
-            cout << "i=" << i << ": q.repr=" << q.repr() << endl; 
+            cout << "i=" << i << ": q.repr=" << q.repr() << endl;
         } catch (const char* msg) {
             cerr << msg << endl;
         }
@@ -93,6 +88,6 @@ int main(int argc, char** argv) {
     } catch (const char* msg) {
         cerr << msg << endl;
     }
-    cout << "final: q.repr=" << q.repr() << endl; 
+    cout << "final: q.repr=" << q.repr() << endl;
     return 0;
 }
