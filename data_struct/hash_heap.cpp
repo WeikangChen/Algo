@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <queue>
 #include <sstream>
 #include <unordered_map>
@@ -11,9 +11,11 @@ using namespace std;
 struct quote {
     using key_t = string;
     key_t exch;
+    key_t* pkey;
     int32_t qty;
     double prc;
-    quote(string ex, const double p) : exch{std::move(ex)}, prc{p} {}
+    quote(string ex, const double p)
+        : exch{std::move(ex)}, pkey{&exch}, prc{p} {}
     friend ostream& operator<<(ostream& os, const quote& q) {
         return os << q.prc << "[" << q.exch << "]";
     }
@@ -116,8 +118,7 @@ class hash_heap {
         oss << std::fixed;
         oss << std::setprecision(2);
         oss << "-------- Hash_Heap ("
-            << "type=" << T::tinfo()
-            << " size=" << data_.size()
+            << "type=" << T::tinfo() << " size=" << data_.size()
             << ") ---------\n";
         if (!data_.empty()) {
             auto it = data_.begin();

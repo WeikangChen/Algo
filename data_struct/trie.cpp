@@ -11,9 +11,9 @@ private:
         unordered_map<char, TrieNode*> children;
         TrieNode() : val("") {children.clear();}
     };
-    
+
     TrieNode *root;
-    
+
 public:
 
     Trie () {
@@ -58,7 +58,7 @@ public:
         for(auto a: cur->children)
             dfs_complete(a.second, res);
     }
-    
+
     vector<string> auto_complete(string word) {
         TrieNode *cur = root;
         vector<string> res;
@@ -74,11 +74,73 @@ public:
 };
 
 
+class Trie2 {
+    struct Node {
+        vector<Node*> children;
+        bool end = false;
+        string str;
+        Node() : children(26, nullptr) {}
+    };
+
+    Node root;
+
+public:
+    void insert(const string& str) {
+        Node* cur = &root;
+        for (const char c: str) {
+            const auto id = c - 'a';
+            if (!cur->children[id])
+                cur->children[id] = new Node;
+            cur = cur->children[id];
+        }
+        cur->end = true;
+        cur->str = str;
+    }
+
+    bool search(const string& str) {
+        Node* cur = &root;
+        for (const char c: str) {
+            const auto id = c - 'a';
+            if (!cur->children[id])
+                return false;
+            cur = cur->children[id];
+        }
+        return true;
+    }
+
+    void dfs_complete(const Node* cur, vector<string>& res) {
+        if (!cur)
+            return;
+        if (cur->end) {
+            res.push_back(cur->str);
+        }
+
+        for (const auto nxt: cur->children) {
+            if (nxt) {
+                dfs_complete(nxt, res);
+            }
+        }
+    }
+    vector<string> auto_complete(const string& str) {
+        Node* cur = &root;
+        for (const char c: str) {
+            const auto id = c - 'a';
+            if (!cur->children[id])
+                return {};
+            cur = cur->children[id];
+        }
+
+        vector<string> res;
+        dfs_complete(cur, res);
+        return res;
+    }
+};
+
 
 
 int main(int argc, char ** argv)
 {
-    Trie trie;
+    Trie2 trie;
     trie.insert("ab");
     trie.insert("abcd");
     trie.insert("abcdasdfad");

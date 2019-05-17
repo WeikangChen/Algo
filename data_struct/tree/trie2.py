@@ -30,8 +30,11 @@ class SuffixTrie:
 
 def main():
     strie = SuffixTrie('there would have been a time for such a word')
-    strie.hasSubstring('nope')
-    strie.hasSubstring('would have been')
+    print strie.hasSubstring('nope')
+    print strie.hasSubstring('would have been')
+    print strie.hasSuffix('would have been')
+    print strie.hasSubstring('such a word')
+    print strie.hasSuffix('such a word')
 
 
 if __name__ == "__main__":
